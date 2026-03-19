@@ -5,34 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K.Murugan Wood Work & Furniture | Mathigiri, Hosur</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-  // ── EMAILJS SETUP ──────────────────────────────────────────────────────────
-  // OWNER: Follow the 3 steps below to activate email notifications:
-  //
-  // STEP 1 — Go to https://www.emailjs.com and create a FREE account
-  // STEP 2 — Create an Email Service (Gmail recommended) → copy the Service ID
-  //          and paste it below replacing "YOUR_SERVICE_ID"
-  // STEP 3 — Create an Email Template with these variables:
-  //          {{customer_name}}, {{customer_phone}}, {{category}},
-  //          {{wood}}, {{visit_date}}, {{budget}}, {{area}}, {{notes}}, {{booking_time}}
-  //          Copy the Template ID and paste it below replacing "YOUR_TEMPLATE_ID"
-  // STEP 4 — Go to Account → API Keys → copy Public Key and paste below replacing "YOUR_PUBLIC_KEY"
-  //
-  // EmailJS free plan = 200 emails/month — enough for a furniture shop!
-  // ──────────────────────────────────────────────────────────────────────────
-
-  const EMAILJS_PUBLIC_KEY  = "YlZK7rvX98fwgwGXL";
-  const EMAILJS_SERVICE_ID  = "service_b4fej97";
-  const EMAILJS_TEMPLATE_ID = "template_fnomimb";
-  const OWNER_EMAIL         = "premalekham@gmail.com";
-
-  (function(){
-    if(EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY"){
-      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-    }
-  })();
-</script>
 <style>
 :root{
   --dk:#1C0D04;--br:#2E1508;--md:#5C2A0E;--wm:#8B4513;--lt:#C07940;
@@ -782,8 +754,8 @@ footer a{color:var(--gd);text-decoration:none;}
         </div>
         <div class="fg"><label>Your Area / City</label><input id="bAddr" type="text" placeholder="Your location for delivery estimate"></div>
         <div class="fg"><label>Requirements & Design Details</label><textarea id="bNotes" placeholder="Describe your requirements — room size, style, colour, wood type, dimensions, reference photos etc."></textarea></div>
-        <button class="fsub" onclick="submitBooking()">📋 Confirm Booking — WhatsApp + Email →</button>
-        <p class="fnote">📱 Booking opens WhatsApp with your details pre-filled AND sends an email alert to the owner. Confirmation within 2 hours!</p>
+        <button class="fsub" onclick="submitBooking()">📋 Confirm Booking & WhatsApp →</button>
+        <p class="fnote">📱 Booking opens WhatsApp with your details pre-filled. Confirmation within 2 hours!</p>
       </div>
     </div>
   </div>
@@ -926,40 +898,12 @@ function submitBooking(){
   if(!name||!phone||!cat){showToast('⚠️ Required Fields','Please fill Name, Mobile & Category.',false);return;}
   if(phone.replace(/\D/g,'').length<10){showToast('⚠️ Invalid Number','Please enter a valid 10-digit mobile number.',false);return;}
   const wood=document.getElementById('bWood').value||'To be decided';
-  const date=document.getElementById('bDate').value||'Not specified';
-  const budget=document.getElementById('bBudget').value||'Not specified';
-  const addr=document.getElementById('bAddr').value||'Not provided';
-  const notes=document.getElementById('bNotes').value||'None';
-  const bookingTime=new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata',dateStyle:'full',timeStyle:'short'});
-
-  // ── 1. SEND EMAIL NOTIFICATION TO OWNER ──────────────────────────────────
-  if(EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
-    const templateParams={
-      to_email:     OWNER_EMAIL,
-      customer_name:  name,
-      customer_phone: phone,
-      category:       cat,
-      wood:           wood,
-      visit_date:     date,
-      budget:         budget,
-      area:           addr,
-      notes:          notes,
-      booking_time:   bookingTime,
-    };
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-      .then(()=>{
-        console.log('✅ Email sent to owner');
-      })
-      .catch(err=>{
-        console.warn('⚠️ Email failed (check EmailJS config):', err);
-      });
-  }
-
-  // ── 2. OPEN WHATSAPP WITH PRE-FILLED MESSAGE ──────────────────────────────
-  const msg=`Hello K.Murugan Wood & Furniture!\n\n📋 *New Booking Request*\n👤 Name: ${name}\n📞 Phone: ${phone}\n🪵 Category: ${cat}\n🌲 Wood: ${wood}\n📅 Visit Date: ${date}\n💰 Budget: ${budget}\n📍 Area: ${addr}\n📝 Details: ${notes}\n\n⏰ Booked on: ${bookingTime}\n\nPlease confirm my appointment. Thank you!`;
-
-  showToast('✅ Booking Sent!',`WhatsApp opening for ${name}. Email alert sent to owner!`,true);
-
+  const date=document.getElementById('bDate').value;
+  const budget=document.getElementById('bBudget').value;
+  const addr=document.getElementById('bAddr').value;
+  const notes=document.getElementById('bNotes').value;
+  const msg=`Hello K.Murugan Wood & Furniture!\n\n📋 New Booking Request:\nName: ${name}\nPhone: ${phone}\nCategory: ${cat}\nWood: ${wood}${date?'\nDate: '+date:''}${budget?'\nBudget: '+budget:''}${addr?'\nArea: '+addr:''}${notes?'\nDetails: '+notes:''}\n\nPlease confirm my appointment. Thank you!`;
+  showToast('Booking Sent!',`Opening WhatsApp for ${name}...`,true);
   setTimeout(()=>{
     ['bName','bPhone','bAddr','bNotes','bDate'].forEach(id=>document.getElementById(id).value='');
     ['bCat','bWood','bBudget'].forEach(id=>document.getElementById(id).selectedIndex=0);
